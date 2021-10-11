@@ -1,0 +1,34 @@
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import logo from './logo.svg';
+import './App.css';
+import Login from "./components/Login";
+//import Signup from "./components/Signup";
+import Home from "./containers/Home";
+import ReceptionistPage from './components/ReceptionistPage';
+import HayyacomEventPage from './components/HayyacomEventPage';
+import EditHayyacomEventPage from './components/EditHayyacomEventPage';
+
+import { Helmet } from 'react-helmet';
+function App() {
+  return (
+    <div>
+       <Switch>
+          <Route exact path='/' component={ReceptionistPage} /> 
+          <Route exact path='/login' component={Login} />          
+          <Route exact path='/home' component={Home} /> 
+		  <Route exact path='/hayyacom/events' component={HayyacomEventPage} />    
+		<Route exact path='/hayyacom/event/:id' component={EditHayyacomEventPage} />  				  
+       </Switch>
+    </div>
+  );
+}
+const checkRoute = () => {
+  let token = localStorage.getItem("token")
+  if (token) {
+    return <Home />
+  } else {
+    return <Login />
+  }
+}
+export default App;
