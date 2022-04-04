@@ -2,7 +2,7 @@ import styled from "styled-components"
 import AddContacts from "../components/AddContacts"
 import ContactsList from "../components/ContactsList"
 import UploadContacts from "../components/UploadContacts"
-
+import { Row, Col} from 'antd';
 const ContactButtonsContainer = styled.div`
     display: flex;
     justify-content: space-between;
@@ -12,13 +12,17 @@ const ContactButtonsContainer = styled.div`
 const Contacts = (props) => {
       
     return (
-        <div>
-		<UploadContacts />
+        <Row>
+        <Col span={24}>
+        <UploadContacts />
             <ContactButtonsContainer>
                 <AddContacts />
             </ContactButtonsContainer>
             <ContactsList />
-        </div>
+                  
+       </Col>
+      </Row>
+		
     )
 }
 

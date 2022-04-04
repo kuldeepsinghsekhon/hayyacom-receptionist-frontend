@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import Home from "./containers/Home";
 import ReceptionistPage from './components/ReceptionistPage';
 import HayyacomEventPage from './components/HayyacomEventPage';
+import WhatsappEventPage from './components/WhatsappEventPage';
 import EditHayyacomEventPage from './components/EditHayyacomEventPage';
 
 import { Helmet } from 'react-helmet';
@@ -17,7 +18,8 @@ function App() {
           <Route exact path='/' component={ReceptionistPage} /> 
           <Route exact path='/login' component={Login} />          
           <Route exact path='/home' component={Home} /> 
-		  <Route exact path='/hayyacom/events' component={HayyacomEventPage} />    
+		  <Route exact path='/hayyacom/events' component={HayyacomEventPage} /> 
+		<Route exact path='/whatsapp/events' component={WhatsappEventPage} /> 		  
 		<Route exact path='/hayyacom/event/:id' component={EditHayyacomEventPage} />  				  
        </Switch>
     </div>

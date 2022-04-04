@@ -16,7 +16,7 @@ const ContactList = (props) => {
     const [message, setMessage] = useState('');
     const [isLoading, setLoading] = useState(false);
     const [messageType, setMessageType] = useState('');
-
+console.log("show event props",props)
     // useEffect(()=>{
     //     setLoading(true)
     //     let userData = localStorage.getItem("loginUser")
@@ -74,6 +74,13 @@ const ContactList = (props) => {
             <Table dataSource={props.events}  pagination={false}
       scroll={{ x: 1000 }}>
                 <Column title="Title" dataIndex="title" key="title" />
+                { <Column
+                title="Title"
+                key="User_Event"
+                render={(text, record) =>(
+                       record.User_Event.map(User_Event=>(<Tag>{User_Event.title}</Tag>))
+               
+                )} />}
                 <Column title="Description" dataIndex="description" key="description" />
                 <Column title="Location URL" dataIndex="locationurl" key="locationurl" />
                 <Column title="Message" dataIndex="message" key="message" />

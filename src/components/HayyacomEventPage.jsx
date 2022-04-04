@@ -30,7 +30,7 @@ const HayyacomEventPage = (props) => {
 
 	const loadData=(value, dateString)=>{
 			setFromdate(dateString[0])
-		let enddate=moment(dateString[1], "YYYY-MM-DD").add('days', 1)
+		let enddate=moment(dateString[1], "YYYY-MM-DD")//.add('days', 1)
 		setTodate(enddate)
         setLoading(true)
         let userData = localStorage.getItem("loginUser")
@@ -155,6 +155,13 @@ const HayyacomEventPage = (props) => {
                 key="partyhall"
                 render={(text, record) => (                 
                        <span>{record.partyhall.name}</span>              
+                )}
+                />}
+                { <Column
+                title="PartyHall Location"
+                key="partyhall"
+                render={(text, record) => (                 
+                       <span>{record.partyhall?.locationURL}</span>              
                 )}
                 />}
 				{ <Column
