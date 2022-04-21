@@ -9,7 +9,9 @@ import ReceptionistPage from './components/ReceptionistPage';
 import HayyacomEventPage from './components/HayyacomEventPage';
 import WhatsappEventPage from './components/WhatsappEventPage';
 import EditHayyacomEventPage from './components/EditHayyacomEventPage';
-
+import AddInviter from './components/AddInviter';
+import AddMobileEvent from './components/AddMobileEvent';
+import AddWhatsAppEvent from './components/AddWhatsAppEvent';
 import { Helmet } from 'react-helmet';
 function App() {
   return (
@@ -18,6 +20,9 @@ function App() {
           <Route exact path='/' component={ReceptionistPage} /> 
           <Route exact path='/login' component={Login} />          
           <Route exact path='/home' component={Home} /> 
+          <Route exact path='/hayyacom/addevent' component={AddMobileEvent} /> 
+          <Route exact path='/hayyacom/addinviter' component={AddInviter} /> 
+          <Route exact path='/hayyacom/add_wa_event' component={AddWhatsAppEvent} /> 
 		  <Route exact path='/hayyacom/events' component={HayyacomEventPage} /> 
 		<Route exact path='/whatsapp/events' component={WhatsappEventPage} /> 		  
 		<Route exact path='/hayyacom/event/:id' component={EditHayyacomEventPage} />  				  

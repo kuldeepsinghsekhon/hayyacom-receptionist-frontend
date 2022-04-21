@@ -10,6 +10,9 @@ import ReceptionistPage from './components/ReceptionistPage';
 import HayyacomEventPage from './components/HayyacomEventPage';
 import WhatsappEventPage from './components/WhatsappEventPage';
 import EditHayyacomEventPage from './components/EditHayyacomEventPage';
+import AddInviter from './components/AddInviter';
+import AddMobileEvent from './components/AddMobileEvent';
+import AddWhatsAppEvent from './components/AddWhatsAppEvent';
 import { Helmet } from 'react-helmet';
 function App() {
   return (
@@ -18,7 +21,10 @@ function App() {
           <Route exact path={`${process.env.PUBLIC_URL}/`} component={ReceptionistPage} />    
 			<Route  path={`${process.env.PUBLIC_URL}/hayyacom/events`}component={HayyacomEventPage} />  
 			<Route exact path={`${process.env.PUBLIC_URL}/whatsapp/events`} component={WhatsappEventPage} /> 				
-			<Route exact path={`${process.env.PUBLIC_URL}/hayyacom/event/:id`} component={EditHayyacomEventPage} />  			
+			<Route exact path={`${process.env.PUBLIC_URL}/hayyacom/event/:id`} component={EditHayyacomEventPage} />  
+			<Route exact path={`${process.env.PUBLIC_URL}/hayyacom/addevent`} component={AddMobileEvent} /> 
+          <Route exact path={`${process.env.PUBLIC_URL}/hayyacom/addinviter`} component={AddInviter} /> 
+          <Route exact path={`${process.env.PUBLIC_URL}/hayyacom/add_wa_event`} component={AddWhatsAppEvent} /> 			
        </Switch>
     </div>
   );

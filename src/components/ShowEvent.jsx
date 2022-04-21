@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {saveEvents, removeEvents} from "../actions/Event"
 import {getEventsApi} from "../api/events"
 import { connect } from 'react-redux';
-import { Modal, Table, Space } from 'antd';
+import { Modal, Table, Space,Tag } from 'antd';
 import Loader from "./Loader"
 import Alerts from "./Alert"
 import { ExclamationCircleOutlined } from '@ant-design/icons';

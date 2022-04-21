@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import AddEvent from "../components/AddEvent";
+import AddEvent from "../components/AddWhatsAppEvent";
 import ShowEvent from "../components/ShowEvent";
 import {saveEvents, removeEvents} from "../actions/Event";
 import {getEventsApi} from "../api/events";
