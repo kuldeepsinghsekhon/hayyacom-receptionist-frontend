@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, DatePicker, Card, Select, InputNumber, Col, Modal, Layout, Menu, Breadcrumb } from 'antd';
+import { Form, Input, Button, DatePicker, Card, Select, InputNumber,Spin, Col, Modal, Layout, Menu, Breadcrumb } from 'antd';
 import { API_URL } from '../constant';
 import { addNewEvent } from "../actions/Event"
 import { connect } from 'react-redux';
@@ -9,22 +9,30 @@ import Alerts from "./Alert"
 import TopNavbar from "./TopNavbar";
 import moment from 'moment';
 import axios from 'axios';
+import styled from 'styled-components';
 const dateFormat = 'MM/DD/YYYY';
 const { Header, Content, Footer, Sider } = Layout;
 const { Option } = Select;
 const { Meta } = Card;
+const InviteImage = styled.img`
+    max-width: 100%;
+    width: 100%;
+`;
 const AddInviter = (props) => {
     const [visible, setVisible] = useState(false);
+    const [showmodal, setShowmodal] = useState(false);
     const [message, setMessage] = useState('');
     const [isLoading, setLoading] = useState(false);
     const [messageType, setMessageType] = useState('');
     const [selectedFile, setSelectedFile] = useState();
     const [isFilePicked, setIsFilePicked] = useState(false);
+    const [base64image, setBase64image] = useState('');
     const [form] = Form.useForm();
     const changeHandler = (event) => {
         setSelectedFile(event.target.files[0]);
         setIsFilePicked(true);
     };
+    const [selectedEvent, setSelectedEvent] = useState();
     let timeout;
     let currentValue;
     const [data, setData] = useState([]);
@@ -42,6 +50,7 @@ const AddInviter = (props) => {
             let host_url = `${API_URL}/hayyacom/events/search`
             axios.post(host_url, postdata).then(d => {
                     console.log(d)
+                    
                     if (currentValue === value) {
                         const result = d?.data?.data;
                         const data = [];
@@ -59,6 +68,29 @@ const AddInviter = (props) => {
 
         timeout = setTimeout(fake, 300);
     }
+
+   const handleImagePreview=async(res_data) => {
+ 
+    setLoading(true)
+        let url = `${API_URL}/invitations/preview_invitation`
+       
+let postData={ "eventid":res_data.data.eventid, "mobileNumber":res_data.data.mobile, "SN":"22","name":"Test Namme","childrenperguest":"2","guests":"2"}
+
+let result = await axios({
+            method: 'post',
+            url: url,
+            data: postData,
+            headers: {  "Access-Control-Allow-Origin": "*",
+            'Content-Type': 'application/json', 
+        }
+        });
+         result = result?.data;
+         //console.log('result?.data',result.image)
+         setBase64image(result.image)
+         setLoading(false)
+         setShowmodal(true)
+    };
+
     const handleSearch = value => {
         if (value) {
             fetch(value, data => setData(data));
@@ -70,7 +102,7 @@ const AddInviter = (props) => {
     const handleChange = value => {
         setValue(value);
     };
-    const dateFormat = 'YYYY/MM/DD';
+   // const dateFormat = 'YYYY/MM/DD';
     function disabledDate(current) {
         // Can not select days before today and today
         return current && current < moment().endOf('day');
@@ -80,7 +112,7 @@ const AddInviter = (props) => {
     }, [])
 
     const onFinish = async (values) => {
-        console.log(values)
+    
         setMessage("")
         setLoading(true)
         values.event.date = values?.event?.date?.format("DD/MM/YYYY")
@@ -104,10 +136,11 @@ const AddInviter = (props) => {
         })
         // addEventsApi(values.event)
         .then(res => {
+            handleImagePreview(res)
             setLoading(false)
             setMessageType('success')
             setVisible(false)
-            form.resetFields();
+            //form.resetFields();
         })
         .catch(err => {
             console.log(err, "err")
@@ -138,14 +171,27 @@ const AddInviter = (props) => {
             <Header>
                 <TopNavbar />
             </Header>
-
+         
             <Content style={{ padding: '0 50px' }}>
+            <Spin spinning={isLoading} delay={500}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
                     <Breadcrumb.Item>Home</Breadcrumb.Item>
                     <Breadcrumb.Item>Invitation</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Card>
+                <Modal
+                        title={'Invitation Preview'}
+                        centered
+                        visible={showmodal}
+                        onCancel={() => setShowmodal(false)}
+                        footer={[]}
+                    >
+                         <InviteImage src={base64image ? `data:image/png;base64,${base64image}`: ''} />
+{/* {base64image ? <img src={`data:image/png;base64,${base64image}`}/>: ''} */}
+                    </Modal>
+
+
                     <Form {...layout} form={form} name="nest-messages" onFinish={onFinish} layout="vertical" validateMessages={validateMessages}>
                         <input type="file" name="file" onChange={changeHandler} />
                         {isFilePicked ? (
@@ -166,7 +212,7 @@ const AddInviter = (props) => {
                             label="name"
                             rules={[
                                 {
-                                    required: false,
+                                    required: true,
                                 },
                             ]}
                         >
@@ -310,6 +356,7 @@ const AddInviter = (props) => {
                                         required: false,
                                     }
                                 ]}
+                                initialValue={'#8E6548'}
                                 style={{ display: 'inline-block', width: 'calc(25% - 8px)' }}
                             >
                                 <Input />
@@ -380,9 +427,10 @@ const AddInviter = (props) => {
                                         required: false,
                                     }
                                 ]}
+                                initialValue={0.3}
                                 style={{ display: 'inline-block' }}
                             >
-                                <InputNumber min={1} max={100} />
+                                <InputNumber min={0} max={100} />
                             </Form.Item>
                             <Form.Item
                                 name={['event', 'SNH']}
@@ -391,24 +439,15 @@ const AddInviter = (props) => {
                                     {
                                         required: false,
                                     }
+
                                 ]}
+                                initialValue={0.3}
                                 style={{ display: 'inline-block', width: 'calc(40% - 8px)', margin: '0 8px' }}
                             >
-                                <InputNumber min={1} max={100} />
+                                <InputNumber min={0} max={100} />
                             </Form.Item>
                         </Form.Item>
-                        <Form.Item
-                            name={['event', 'LetterURL']}
-                            label="LetterURL"
-                            rules={[
-                                {
-                                    required: true,
-                                }
-                            ]}
 
-                        >
-                            <Input />
-                        </Form.Item>
                         <Form.Item
                             name={['event', 'numberMessage']}
                             label="numberMessage"
@@ -433,25 +472,17 @@ const AddInviter = (props) => {
                         >
                             <Input />
                         </Form.Item>
-                        <Form.Item label="DatePicker" name={['event', 'date']}
-                            label="Event Date"
 
-                            rules={[
-                                {
-                                    required: false,
-                                }
-                            ]}>
-
-                            <DatePicker format={dateFormat} />
-                        </Form.Item>
                         <Form.Item>
                             <Button type="primary" htmlType="submit">
-                                Submit
+                                Submit & Preview
                             </Button>
                         </Form.Item>
                     </Form>
                 </Card>
+                </Spin>
             </Content>
+
             <Footer style={{ textAlign: 'center' }}>{footer()}</Footer>
 
         </Layout>

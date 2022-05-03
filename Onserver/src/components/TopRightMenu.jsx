@@ -13,8 +13,18 @@ const TopRightMenu = (props) => {
 <Menu.Item key="receptionists">
 		 <a href={`${process.env.PUBLIC_URL}/`}>Receptionists</a>
 		</Menu.Item>
+		
 <Menu.Item key="hayyacomevents">
 		 <a href={`${process.env.PUBLIC_URL}/hayyacom/events/`}>Hayyacom Events</a>
+		</Menu.Item>
+		<Menu.Item key="addevent">
+		 <a href={`${process.env.PUBLIC_URL}/hayyacom/addevent/`}>Hayyacom Create Events</a>
+		</Menu.Item>
+		<Menu.Item key="inviter_search">
+		 <a href={`${process.env.PUBLIC_URL}/hayyacom/inviter_search`}>Hayyacom Search</a>
+		</Menu.Item>
+		<Menu.Item key="inviter_search">
+		 <a href={`${process.env.PUBLIC_URL}/hayyacom/addpartyhall`}>Addpartyhall</a>
 		</Menu.Item>
 <Menu.Item key="whatsapp">
 		 <a href={`${process.env.PUBLIC_URL}/whatsapp/events/`}>whatsapp Events</a>

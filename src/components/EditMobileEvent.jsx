@@ -14,75 +14,44 @@ const { Header, Content, Footer, Sider } = Layout;
 const { Option } = Select;
 const { Meta } = Card;
 
-const AddMobileEvent = (props) => {
+
+const EditMobileEvent = (props) => {
     const [visible, setVisible] = useState(false);
     const [message, setMessage] = useState('');
     const [isLoading, setLoading] = useState(false);
     const [messageType, setMessageType] = useState('');
-    const [selectedFile, setSelectedFile] = useState();
-    const [isFilePicked, setIsFilePicked] = useState(false);
+
     const [form] = Form.useForm();
-    let timeout;
-    let currentValue;
-    const [data, setData] = useState([]);
-    const [value, setValue] = useState(undefined);
-    const changeHandler = (event) => {
-        setSelectedFile(event.target.files[0]);
-        setIsFilePicked(true);
-    };
     function disabledDate(current) {
         // Can not select days before today and today
         return current && current < moment().endOf('day');
     }
-    function fetch(value, callback) {
-        if (timeout) {
-            clearTimeout(timeout);
-            timeout = null;
-        }
-        currentValue = value;
-
-        function fake() {
-            const postdata = { code: 'utf-8', q: value }
-            let host_url = `${API_URL}/partyhall/search`
-            axios.post(host_url, postdata).then(d => {
-                console.log(d)
-                if (currentValue === value) {
-                    const result = d?.data?.data;
-                    const data = [];
-                    result.forEach(r => {
-                        console.log(r)
-                        data.push({
-                            value: r.id,
-                            text: r.name,
-                        });
-                    });
-                    callback(data);
-                }
-            });
-        }
-
-        timeout = setTimeout(fake, 300);
+    const  fetchData=() => {
+        const { match: { params } } = props;
+        const eventid=params.id
+        let url = `${API_URL}/hayyacom/events/${eventid}`
+    
+         axios({
+            method: 'get',
+            url: url,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                'Content-Type': 'application/json',
+            }
+        }).then(res => {
+            console.log('res.data',res.data)
+            setData(res.data.data)
+        })
     }
-    const handleSearch = value => {
-        if (value) {
-            fetch(value, data => setData(data));
-        } else {
-            setData([]);
-        }
-    };
-    const handleChange = value => {
-        setValue(value);
-    };
-
-    const options = data.map(d => <Option key={d.value}>{d.text}</Option>);
-    const onFinish = async (values) => {
+    const [data, setData] = useState(fetchData);
+        const onFinish = async (values) => {
         console.log(values)
         setMessage("")
         setLoading(true)
         values.event.date = values.event.date.format("YYYY/MM/DD")
-      
+        values.event.id = data?.id
         //let url='https://hayyacom.net/WhatsappInvitation/hayyacom/events/create'
-        let url = `${API_URL}/hayyacom/events/create`
+        let url = `${API_URL}/hayyacom/events/update`
 
         axios({
             method: 'post',
@@ -99,7 +68,7 @@ const AddMobileEvent = (props) => {
             let ev = res.data.data
             console.log(' res.data', res.data)
             form.resetFields();///receptionists
-            props.history.push(`/receptionists/hayyacom/addinviter_preview/${ev.id}`)
+            props.history.push(`/receptionists/hayyacom/addinviter_preview/${data?.id}`)
         })
             .catch(err => {
                 console.log(err, "err")
@@ -131,7 +100,7 @@ const AddMobileEvent = (props) => {
                 </Breadcrumb>
 
                 <Card>
-                    <Form name="nest-messages" form={form} onFinish={onFinish} validateMessages={validateMessages}>
+                  {data? <Form name="nest-messages" form={form} onFinish={onFinish} validateMessages={validateMessages}>
 
                         <Form.Item
                             name={['event', 'eventtitle']}
@@ -141,6 +110,7 @@ const AddMobileEvent = (props) => {
                                     required: true,
                                 },
                             ]}
+                            initialValue={data?.eventtitle}
                         >
                             <Input />
                         </Form.Item>
@@ -152,21 +122,9 @@ const AddMobileEvent = (props) => {
                                     required: true,
                                 }
                             ]}
+                            initialValue={data?.partyhallid}
                         >
-                            <Select
-                                showSearch
-                                value={value}
-                                //placeholder={props.placeholder}
-                                //style={props.style}
-                                defaultActiveFirstOption={false}
-                                showArrow={false}
-                                filterOption={false}
-                                onSearch={handleSearch}
-                                onChange={handleChange}
-                                notFoundContent={null}
-                            >
-                                {options}
-                            </Select>
+                            <Input/>
                         </Form.Item>
                         <Form.Item
                             name={['event', 'totalguest']}
@@ -176,6 +134,7 @@ const AddMobileEvent = (props) => {
                                     required: true
                                 },
                             ]}
+                            initialValue={data?.totalguest}
                         >
                             <Input />
                         </Form.Item>
@@ -187,6 +146,7 @@ const AddMobileEvent = (props) => {
                                     required: true
                                 },
                             ]}
+                            initialValue={data?.packagetype}
                         >
                             <Select  >
                                 <Option value="Regular">Regular</Option>
@@ -202,6 +162,8 @@ const AddMobileEvent = (props) => {
                                     required: true
                                 },
                             ]}
+                            initialValue={data?.notes}
+
                         >
                             <Input />
                         </Form.Item>
@@ -213,25 +175,26 @@ const AddMobileEvent = (props) => {
                                     required: true,
                                 }
                             ]}
+                            initialValue={data?.type}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item label="DatePicker" name={['event', 'date']}
                             label="Event Date"
-
+                            initialValue={data?.date?moment(data.date,"YYYY/MM/DD"):''}
                             rules={[
                                 {
                                     required: true,
                                 }
                             ]}>
-                            <DatePicker disabledDate={disabledDate} />
+                            <DatePicker defaultValue={data?.date?moment(data.date,"YYYY/MM/DD"):''} disabledDate={disabledDate} />
                         </Form.Item>
                         <Form.Item>
                             <Button type="primary" htmlType="submit">
                                 NEXT PREVIEW INVITER
                             </Button>
                         </Form.Item>
-                    </Form>
+                    </Form>:''}
                 </Card>
             </Content>
             <Footer style={{ textAlign: 'center' }}>{footer()}</Footer>
@@ -252,4 +215,4 @@ const mapDispatchToProps = dispatch => ({
     AddNewEvent: (data) => dispatch(addNewEvent(data))
 })
 
-export default connect("", mapDispatchToProps)(AddMobileEvent);
+export default connect("", mapDispatchToProps)(EditMobileEvent);

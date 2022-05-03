@@ -11,8 +11,9 @@ import moment from 'moment';
 import axios from 'axios';
 const dateFormat = 'MM/DD/YYYY';
 const { Header, Content, Footer, Sider } = Layout;
-
+const { Option } = Select;
 const { Meta } = Card;
+
 const AddMobileEvent = (props) => {
     const [visible, setVisible] = useState(false);
     const [message, setMessage] = useState('');
@@ -20,6 +21,11 @@ const AddMobileEvent = (props) => {
     const [messageType, setMessageType] = useState('');
     const [selectedFile, setSelectedFile] = useState();
     const [isFilePicked, setIsFilePicked] = useState(false);
+    const [form] = Form.useForm();
+    let timeout;
+    let currentValue;
+    const [data, setData] = useState([]);
+    const [value, setValue] = useState(undefined);
     const changeHandler = (event) => {
         setSelectedFile(event.target.files[0]);
         setIsFilePicked(true);
@@ -28,36 +34,81 @@ const AddMobileEvent = (props) => {
         // Can not select days before today and today
         return current && current < moment().endOf('day');
     }
+    function fetch(value, callback) {
+        if (timeout) {
+            clearTimeout(timeout);
+            timeout = null;
+        }
+        currentValue = value;
+
+        function fake() {
+            const postdata = { code: 'utf-8', q: value }
+            let host_url = `${API_URL}/partyhall/search`
+            axios.post(host_url, postdata).then(d => {
+                console.log(d)
+                if (currentValue === value) {
+                    const result = d?.data?.data;
+                    const data = [];
+                    result.forEach(r => {
+                        console.log(r)
+                        data.push({
+                            value: r.id,
+                            text: r.name,
+                        });
+                    });
+                    callback(data);
+                }
+            });
+        }
+
+        timeout = setTimeout(fake, 300);
+    }
+    const handleSearch = value => {
+        if (value) {
+            fetch(value, data => setData(data));
+        } else {
+            setData([]);
+        }
+    };
+    const handleChange = value => {
+        setValue(value);
+    };
+
+    const options = data.map(d => <Option key={d.value}>{d.text}</Option>);
     const onFinish = async (values) => {
         console.log(values)
         setMessage("")
         setLoading(true)
-        values.event.date = values.event.date.format("DD/MM/YYYY")
+        values.event.date = values.event.date.format("YYYY/MM/DD")
+      
         //let url='https://hayyacom.net/WhatsappInvitation/hayyacom/events/create'
         let url = `${API_URL}/hayyacom/events/create`
 
-        await axios({
+        axios({
             method: 'post',
             url: url,
             data: values.event,
-            headers: {  "Access-Control-Allow-Origin": "*",
-            'Content-Type': 'application/json', }
-        });
-        // addEventsApi(values.event)
-        // .then(res => {
-        //     setLoading(false)
-        //     setMessageType('success')
-        //     setVisible(false)
-        //     props.AddNewEvent(res.data)
-        // })
-        // .catch(err => {
-        //     console.log(err, "err")
-        //   const {message} = err
-        //     setMessageType('error')
-        //     setMessage(message)
-        //     setLoading(false)
-        //     setVisible(false) 
-        // })
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                'Content-Type': 'application/json',
+            }
+        }).then(res => {
+            setLoading(false)
+            setMessageType('success')
+            setVisible(false)
+            let ev = res.data.data
+            console.log(' res.data', res.data)
+            form.resetFields();///receptionists
+            props.history.push(`/receptionists/hayyacom/addinviter_preview/${ev.id}`)
+        })
+            .catch(err => {
+                console.log(err, "err")
+                const { message } = err
+                setMessageType('error')
+                setMessage(message)
+                setLoading(false)
+                setVisible(false)
+            })
     };
     const footer = () => {
         //  if (lang == 'en') {
@@ -76,12 +127,12 @@ const AddMobileEvent = (props) => {
             <Content style={{ padding: '0 50px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
                     <Breadcrumb.Item>Home</Breadcrumb.Item>
-                    <Breadcrumb.Item>Add Event</Breadcrumb.Item>
+                    <Breadcrumb.Item>STEP 1: CREATING EVENT</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Card>
-                    <Form name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
-                      
+                    <Form name="nest-messages" form={form} onFinish={onFinish} validateMessages={validateMessages}>
+
                         <Form.Item
                             name={['event', 'eventtitle']}
                             label="Title"
@@ -102,7 +153,20 @@ const AddMobileEvent = (props) => {
                                 }
                             ]}
                         >
-                            <Input />
+                            <Select
+                                showSearch
+                                value={value}
+                                //placeholder={props.placeholder}
+                                //style={props.style}
+                                defaultActiveFirstOption={false}
+                                showArrow={false}
+                                filterOption={false}
+                                onSearch={handleSearch}
+                                onChange={handleChange}
+                                notFoundContent={null}
+                            >
+                                {options}
+                            </Select>
                         </Form.Item>
                         <Form.Item
                             name={['event', 'totalguest']}
@@ -124,7 +188,11 @@ const AddMobileEvent = (props) => {
                                 },
                             ]}
                         >
-                            <Input />
+                            <Select  >
+                                <Option value="Regular">Regular</Option>
+                                <Option value="Discounted">Discounted</Option>
+
+                            </Select>
                         </Form.Item>
                         <Form.Item
                             name={['event', 'notes']}
@@ -139,7 +207,7 @@ const AddMobileEvent = (props) => {
                         </Form.Item>
                         <Form.Item
                             name={['event', 'type']}
-                            label="type"
+                            label="Party Type"
                             rules={[
                                 {
                                     required: true,
@@ -160,7 +228,7 @@ const AddMobileEvent = (props) => {
                         </Form.Item>
                         <Form.Item>
                             <Button type="primary" htmlType="submit">
-                                Submit
+                                NEXT PREVIEW INVITER
                             </Button>
                         </Form.Item>
                     </Form>
