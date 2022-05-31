@@ -45,7 +45,7 @@ const AddInviterPreview = (props) => {
 
    
     const handleImagePreview = async (res_data) => {
-console.log(res_data)
+
         setLoading(true)
         let url = `${API_URL}/invitations/preview_invitation`
 
@@ -61,7 +61,7 @@ console.log(res_data)
             }
         });
         result = result?.data;
-        //console.log('result?.data',result.image)
+        console.log('result?.data',result.image)
         setBase64image(result.image)
         setLoading(false)
         setShowmodal(true)
@@ -98,7 +98,7 @@ console.log(res_data)
                 handleImagePreview(res)
                 setLoading(false)
                 setMessageType('success')
-                setVisible(false)
+               // setVisible(false)
                 //form.resetFields();
                
             })
@@ -125,6 +125,9 @@ console.log(res_data)
         },
     };
 
+    
+// Change this to target your element and add it wherever you need it to appear
+//document.modalimage.appendChild(iosImg);
     return (
         <Layout className="layout">
 
@@ -147,8 +150,9 @@ console.log(res_data)
                             onCancel={() => setShowmodal(false)}
                             footer={[]}
                         >
-                            <InviteImage src={base64image ? `data:image/png;base64,${base64image}` : ''} />
-                            {/* {base64image ? <img src={`data:image/png;base64,${base64image}`}/>: ''} */}
+											
+											<InviteImage src={base64image+'?'+Math.random()} />
+                            {/* <InviteImage src="https://hayyacom.net/public/photo/iflowerinvitation/entrance555.jpg"/> */}
                         </Modal>
 
 
@@ -160,10 +164,7 @@ console.log(res_data)
                                     <p>Filename: {selectedFile.name}</p>
                                     <p>Filetype: {selectedFile.type}</p>
                                     <p>Size in bytes: {selectedFile.size}</p>
-                                    <p>
-                                        lastModifiedDate:{' '}
-                                        {selectedFile.lastModifiedDate.toLocaleDateString()}
-                                    </p>
+                                   
                                 </div>
                             ) : (
                                 <p>Select a file to show details</p>

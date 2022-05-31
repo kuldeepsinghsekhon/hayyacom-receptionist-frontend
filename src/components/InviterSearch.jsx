@@ -25,6 +25,7 @@ const InviterSearch = (props) => {
     let timeout;
     let currentValue;
     const [data, setData] = useState([]);
+    const [table, setTable] = useState('inviter');
     const [inviterdata, setInviterdata] = useState([]);
     const [value, setValue] = useState(undefined);
     const changeHandler = (event) => {
@@ -43,7 +44,7 @@ const InviterSearch = (props) => {
         currentValue = value;
 
         function fake() {
-            const postdata = { code: 'utf-8', q: value }
+            const postdata = { code: 'utf-8', q: value,'table':table }
             let host_url = `${API_URL}/hayyacom/invitors/serach_by_mobile`
             axios.post(host_url, postdata).then(d => {
                 console.log(d)
@@ -120,6 +121,22 @@ const InviterSearch = (props) => {
                                 notFoundContent={null}
                             >
                                 {options}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            name={['event', 'packagetype']}
+                            label="packagetype"
+                            rules={[
+                                {
+                                    required: true
+                                },
+                            ]}
+                            
+                        >
+                            <Select onSelect={(e)=>setTable(e)} >
+                                <Option value="inviter">inviter</Option>
+                                <Option value="preview_inviter">preview inviter</Option>
+
                             </Select>
                         </Form.Item>
                   

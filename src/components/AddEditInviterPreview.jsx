@@ -19,7 +19,7 @@ const InviteImage = styled.img`
     max-width: 100%;
     width: 100%;
 `;
-const AddInviterPreview = (props) => {
+const AddEditInviterPreview = (props) => {
     let history = useHistory();
     const [visible, setVisible] = useState(false);
     const [showmodal, setShowmodal] = useState(false);
@@ -29,6 +29,7 @@ const AddInviterPreview = (props) => {
     const [selectedFile, setSelectedFile] = useState();
     const [isFilePicked, setIsFilePicked] = useState(false);
     const [base64image, setBase64image] = useState('');
+    const [data, setData] = useState(fetchData);
     const { match: { params } } = props;
     const eventid=params.eventid
     const [prviewid, setPrviewid] = useState(0);
@@ -42,10 +43,23 @@ const AddInviterPreview = (props) => {
     let currentValue;
    
     const [value, setValue] = useState(undefined);
+    const  fetchData=() => {
+      
+        let url = `${API_URL}/hayyacom/invitors/searchPreview`
 
+         axios({
+            method: 'post',
+            url: url,
+            data: {id:id},
+            //headers: { 'Content-Type': 'multipart/form-data' }
+        }).then(res => {
+            console.log(res.data.data)
+            setData(res.data.data)
+        })
+    }
    
     const handleImagePreview = async (res_data) => {
-
+console.log(res_data)
         setLoading(true)
         let url = `${API_URL}/invitations/preview_invitation`
 
@@ -61,7 +75,7 @@ const AddInviterPreview = (props) => {
             }
         });
         result = result?.data;
-        console.log('result?.data',result.image)
+        //console.log('result?.data',result.image)
         setBase64image(result.image)
         setLoading(false)
         setShowmodal(true)
@@ -98,7 +112,7 @@ const AddInviterPreview = (props) => {
                 handleImagePreview(res)
                 setLoading(false)
                 setMessageType('success')
-               // setVisible(false)
+                setVisible(false)
                 //form.resetFields();
                
             })
@@ -125,9 +139,6 @@ const AddInviterPreview = (props) => {
         },
     };
 
-    
-// Change this to target your element and add it wherever you need it to appear
-//document.modalimage.appendChild(iosImg);
     return (
         <Layout className="layout">
 
@@ -150,9 +161,8 @@ const AddInviterPreview = (props) => {
                             onCancel={() => setShowmodal(false)}
                             footer={[]}
                         >
-											
-											<InviteImage src={base64image+'?'+Math.random()} />
-                            {/* <InviteImage src="https://hayyacom.net/public/photo/iflowerinvitation/entrance555.jpg"/> */}
+                            <InviteImage src={base64image ? `data:image/png;base64,${base64image}` : ''} />
+                            {/* {base64image ? <img src={`data:image/png;base64,${base64image}`}/>: ''} */}
                         </Modal>
 
 
@@ -514,4 +524,4 @@ const mapDispatchToProps = dispatch => ({
     AddNewEvent: (data) => dispatch(addNewEvent(data))
 })
 
-export default connect("", mapDispatchToProps)(AddInviterPreview);
+export default connect("", mapDispatchToProps)(AddEditInviterPreview);
