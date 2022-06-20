@@ -10,6 +10,7 @@ export const editHayyacomEventsApi = (data) => apiPatch(`${API_URL}/hayyacom/eve
 export const getReceptionistApi = (data) => apiPost(`${API_URL}/receptionist/eventcity`, data)
 export const assignReceptionistApi = (data) => apiPost(`${API_URL}/hayyacom/event/receptioninst/`, data)
 export const getEventDetail = (id) => apiGet(`${API_URL}/hayyacom/events/${id}`)
+
 /*
 
 export const deleteContactsApi = data => apiDelete(`${API_URL}/contacts/${data}`)

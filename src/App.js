@@ -18,6 +18,7 @@ import InviterSearch from './components/InviterSearch';
 import AddWhatsAppEvent from './components/AddWhatsAppEvent';
 import { Helmet } from 'react-helmet';
 import AddPartyHall from './components/AddPartyHall';
+import GuestlistPage from './components/GuestlistPage';
 function App() {
   return (
     <div>
@@ -36,6 +37,7 @@ function App() {
         <Route exact path='/hayyacom/events' component={HayyacomEventPage} />
         <Route exact path='/whatsapp/events' component={WhatsappEventPage} />
         <Route exact path='/hayyacom/event/:id' component={EditHayyacomEventPage} />
+        <Route exact path='/guestlist/:invitermobile' component={GuestlistPage} />
       </Switch>
     </div>
   );

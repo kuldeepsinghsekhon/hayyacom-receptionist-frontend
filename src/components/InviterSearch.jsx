@@ -4,16 +4,21 @@ import { addNewEvent } from "../actions/Event"
 import { API_URL } from '../constant';
 import { connect } from 'react-redux';
 import validateMessages from "../utils/validationMessages"
-import { addEventsApi } from "../api/events"
 import Alerts from "./Alert"
 import TopNavbar from "./TopNavbar";
 import moment from 'moment';
 import axios from 'axios';
+import styled from 'styled-components';
 const dateFormat = 'MM/DD/YYYY';
 const { Header, Content, Footer, Sider } = Layout;
 const { Option } = Select;
 const { Meta } = Card;
 
+const Error = styled.p`
+    margin-top: 5px;
+    margin-bottom: 0px;
+    color: #f70505;
+`
 const InviterSearch = (props) => {
     const [visible, setVisible] = useState(false);
     const [message, setMessage] = useState('');
@@ -28,6 +33,7 @@ const InviterSearch = (props) => {
     const [table, setTable] = useState('inviter');
     const [inviterdata, setInviterdata] = useState([]);
     const [value, setValue] = useState(undefined);
+    const [reserror, setReserror] = useState("")
     const changeHandler = (event) => {
         setSelectedFile(event.target.files[0]);
         setIsFilePicked(true);
@@ -35,6 +41,14 @@ const InviterSearch = (props) => {
     function disabledDate(current) {
         // Can not select days before today and today
         return current && current < moment().endOf('day');
+    }
+    const delete_guestlist=async (eventid,mobile)=>{
+      let  url=`${API_URL}/hayyacom/invitors/delete_invitations/${eventid}/${mobile}`
+      let res=  axios.delete(url) .then((response) => {}).catch((error) => {
+        console.log(error.response.data.message); //Logs a string: Error: Request failed with status code 404
+        setReserror(error.response.data.message)
+      });
+     // console.log(res.error)
     }
     function fetch(value, callback) {
         if (timeout) {
@@ -56,7 +70,8 @@ const InviterSearch = (props) => {
                         console.log(r)
                         data.push({
                             value: r,
-                            text: r.mobile+' ( Event id '+r.eventid+' Name:'+r.name+' ) ',
+                            text: r.mobile,
+                           // text: r.mobile+' ( Event id '+r.eventid+' Name:'+r.name+' ) ',
                         });
                     });
                     callback(data);
@@ -97,7 +112,7 @@ const InviterSearch = (props) => {
                     <Breadcrumb.Item>Home</Breadcrumb.Item>
                     <Breadcrumb.Item>Search</Breadcrumb.Item>
                 </Breadcrumb>
-
+                {reserror && <Error><b>{reserror}</b></Error>}
                 <Card>
                 <Form.Item
                             name={['event', 'partyhallid']}
@@ -111,7 +126,7 @@ const InviterSearch = (props) => {
                             <Select
                                 showSearch
                                 value={value}
-                                placeholder={'phone number Or Event id Or Name'}
+                                placeholder={'mobile '}
                                 //style={props.style}
                                 defaultActiveFirstOption={false}
                                 showArrow={false}
@@ -123,31 +138,17 @@ const InviterSearch = (props) => {
                                 {options}
                             </Select>
                         </Form.Item>
-                        <Form.Item
-                            name={['event', 'packagetype']}
-                            label="packagetype"
-                            rules={[
-                                {
-                                    required: true
-                                },
-                            ]}
-                            
-                        >
-                            <Select onSelect={(e)=>setTable(e)} >
-                                <Option value="inviter">inviter</Option>
-                                <Option value="preview_inviter">preview inviter</Option>
 
-                            </Select>
-                        </Form.Item>
                   
                   {data?.map(d =><Row style={{border:'1px solid green',padding:'0.5rem',margin:'0.5rem',wordSpacing:'1rem'}} >
-                       <p><label>Name:</label> {d?.value?.name}
-                       <label> mobile:</label> {d?.value?.mobile}  
-                       <label>EventId:</label> {d?.value?.eventid} 
+                       <p>
+                           {/* <label>Name:</label> {d?.value?.name} */}
+                       <label> mobile: </label> {d?.value?.mobile}  <label>  </label>
+                       <label> EventId: </label> {d?.value?.eventid} 
                        <a href={`/receptionists/hayyacom/editinviter/${d?.value.eventid}/${d.value?.mobile}`}> EditInviter </a>
                         <a href={`/receptionists/hayyacom/editevent/${d?.value.eventid}`}> EditEvent </a>
-                        <a href={`/receptionists/hayyacom/addinviter_preview/${d?.value.eventid}`}> AddMoreInviter </a>
-                        
+                         {/* <a href={`/receptionists/hayyacom/addinviter_preview/${d?.value.eventid}`}> AddMoreInviter </a>  */}
+                        <Button onClick={()=>delete_guestlist(d?.value.eventid,d?.value.mobile)}> Delete Guestlist </Button>
                        </p></Row>)}
                  
                 </Card>

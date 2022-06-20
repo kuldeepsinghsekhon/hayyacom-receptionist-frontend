@@ -19,6 +19,7 @@ export const saveContacts = (data) => dispatch => {
     })
 }
 
+
 export const addNewContacts = (data) => dispatch => {
     dispatch({
         type: 'ADD_NEW_CONTACT',

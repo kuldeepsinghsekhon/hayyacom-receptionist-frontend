@@ -1,7 +1,7 @@
 const INITIAL_STATE = {
     user: {},
     activeTab: "dashboard",
-    contacts: []
+    contacts: [],
 }
 
 const UserReducer = (state = INITIAL_STATE, action) => {
@@ -12,6 +12,7 @@ const UserReducer = (state = INITIAL_STATE, action) => {
                 "user": action.payload
             }
         break;
+
         case "SET_ACTIVE_TAB":
             return {
                 ...state,

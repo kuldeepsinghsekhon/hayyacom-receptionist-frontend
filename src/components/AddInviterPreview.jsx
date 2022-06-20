@@ -32,6 +32,7 @@ const AddInviterPreview = (props) => {
     const { match: { params } } = props;
     const eventid=params.eventid
     const [prviewid, setPrviewid] = useState(0);
+    const [hevent, setHevent] = useState({});
     const [form] = Form.useForm();
     const changeHandler = (event) => {
         setSelectedFile(event.target.files[0]);
@@ -43,7 +44,18 @@ const AddInviterPreview = (props) => {
    
     const [value, setValue] = useState(undefined);
 
-   
+    useEffect(async() => {
+        let url = `${API_URL}/hayyacom/invitors/${eventid}`
+let result = await axios({
+            method: 'get',
+            url: url,
+            headers: {  "Access-Control-Allow-Origin": "*",
+            'Content-Type': 'application/json', 
+        }
+        });
+         result = result?.data;
+         setHevent(result.data)
+    }, [])
     const handleImagePreview = async (res_data) => {
 
         setLoading(true)
@@ -242,7 +254,7 @@ const AddInviterPreview = (props) => {
                             >
                                 <Input />
                             </Form.Item>
-
+                            <p>packagetype {hevent?.packagetype}</p>
                             <Form.Item label="QR Settings" style={{ marginBottom: 0 }}>
 
                                 <Form.Item
@@ -449,18 +461,7 @@ const AddInviterPreview = (props) => {
                                 </Form.Item>
                             </Form.Item>
 
-                            <Form.Item
-                                name={['event', 'NumberMessage']}
-                                label="NumberMessage"
-                                rules={[
-                                    {
-                                        required: false,
-                                    }
-                                ]}
-                               // initialValue={data.NumberMessage}
-                            >
-                                <Input />
-                            </Form.Item>
+   
                             
 
                             <Form.Item

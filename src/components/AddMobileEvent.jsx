@@ -79,9 +79,11 @@ const AddMobileEvent = (props) => {
         console.log(values)
         setMessage("")
         setLoading(true)
-        values.event.date = values.event.date.format("YYYY/MM/DD")
-      
-        //let url='https://hayyacom.net/WhatsappInvitation/hayyacom/events/create'
+        console.log('values.event.date',values.event.date)
+        let fdate=moment.utc(values.event.date, 'MM-DD-YYYY').format("YYYY-MM-DD")
+        console.log('fdae',fdate)
+        values.event.date =fdate;// values.event.date.format("YYYY/MM/DD")
+console.log(values.event)
         let url = `${API_URL}/hayyacom/events/create`
 
         axios({

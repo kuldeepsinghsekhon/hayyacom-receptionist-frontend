@@ -28,7 +28,7 @@ const AddPartyHall = (props) => {
         setLoading(true)
       
         //let url='https://hayyacom.net/WhatsappInvitation/hayyacom/events/create'
-        let url = `${API_URL}/hayyacom/partyhall/create`
+        let url = `${API_URL}/partyhall/create`
 
         axios({
             method: 'post',
@@ -136,7 +136,7 @@ const AddPartyHall = (props) => {
                             label="locationURL"
                             rules={[
                                 {
-                                    required: true
+                                    required: false
                                 },
                             ]}
                         >

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import TopNavbar from "./TopNavbar";
 import { Modal, Table, Space,Layout} from 'antd';
-import {saveContacts, removeContact} from "../actions/User"
-import {saveReceptionists, removeReceptionist} from "../actions/Receptionist"
+import {saveGuestlists, removeGuestlist} from "../actions/Guestlist"
 import {getContactsApi, deleteContactsApi, inviteContactsApi} from "../api/contacts"
-import {getReceptionistApi} from "../api/receptionist"
+import {getGuestlistsApi} from "../api/guestlists"
 import { connect } from 'react-redux';
 
 import Loader from "./Loader"
@@ -12,11 +11,11 @@ import Alerts from "./Alert"
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import EditReceptionist from './EditReceptionist';
 import { APP_URL } from '../constant';
-import AddReceptionist from "../components/AddReceptionist"
+import AddReceptionist from "./AddReceptionist"
 const { confirm } = Modal;
 const { Column } = Table;
 const { Header, Content, Footer } = Layout;
-const ReceptionistPage = (props) => {
+const GuestlistPage = (props) => {
     const [selectedReceptionist, setSelectedReceptionist] = useState({})
     const [visible, setVisible] = useState(false);
     const [message, setMessage] = useState('');
@@ -27,11 +26,18 @@ const ReceptionistPage = (props) => {
         setLoading(true)
         let userData = localStorage.getItem("loginUser")
        // if(userData) {
+        let { match: { params } } = props;
+        let invitermobile = params?.invitermobile ? params?.invitermobile : '98';
             userData = JSON.parse(userData)
-            getReceptionistApi().then(res => {
-                const {data} = res		
-                console.log('datadatadata',data)	
-                props.SaveReceptionists(data)
+            let postdata = { invitermobile: invitermobile }
+            console.log('postdata',postdata)
+        getGuestlistsApi(postdata.invitermobile).then(res => {
+                const {data} = res	
+                console.log('data',res.data)
+                if(res?.data.length>0){
+                    props.SaveGuestlists(data)
+                }		
+                
                 setLoading(false)
             }).catch(err => {
                 console.log( err, "err")
@@ -43,30 +49,30 @@ const ReceptionistPage = (props) => {
         //}
     }, [])
 
-    // const deleteContacts = (id) => {
-    //     deleteContactsApi(id).then(res => {
-    //         props.RemoveContact(id)
-    //         setLoading(false)
-    //     }).catch(err => {
-    //         const {message} = err.response.data
-    //         setMessageType('error')
-    //         setMessage(message)
-    //         setLoading(false)
-    //     })
-    // }
+    const deleteContacts = (id,SN) => {
+        deleteContactsApi(id).then(res => {
+            props.RemoveGuestlist(id,SN)
+            setLoading(false)
+        }).catch(err => {
+            const {message} = err.response.data
+            setMessageType('error')
+            setMessage(message)
+            setLoading(false)
+        })
+    }
 
-    // const showConfirm = (id) => {
-    //     confirm({
-    //         title: 'Do you Want to delete these items?',
-    //         icon: <ExclamationCircleOutlined />,
-    //         onOk() {
-    //             deleteContacts(id)
-    //         },
-    //         onCancel() {
-    //             console.log('Cancel');
-    //         },
-    //     });
-    // }
+    const showConfirm = (id,SN) => {
+        confirm({
+            title: 'Do you Want to delete these items?',
+            icon: <ExclamationCircleOutlined />,
+            onOk() {
+                deleteContacts(id,SN)
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    }
 
     const editReceptionist = (receptionist) => {
 
@@ -83,27 +89,26 @@ const ReceptionistPage = (props) => {
 		</Header>
 			 <Content className="site-layout" >
             <div className="site-layout-background" style={{ padding: 24, minHeight: 380 }}>
-		 <AddReceptionist />
+		
             {/* {isLoading && <Loader />} */}
             {message && <Alerts type={messageType} message={message}/>}
             {visible && <EditReceptionist receptionist={selectedReceptionist} visible={visible} closeModal={()=>{setVisible(false)}}/>}
            
-            <Table dataSource={props.receptionists}      scroll={{ x: 1000 }}>
-                <Column title="id" dataIndex="id" key="id" />
-                <Column title="Phone Number" dataIndex="MobileNo" key="MobileNo" />
-                <Column title="Name" dataIndex="Rname" key="Rname" />
-                <Column title="City" dataIndex="city" key="city" />
-				<Column title="Fees" dataIndex="fees" key="fees" />
-				{ /*<Column
+            <Table dataSource={props.guestlists}      scroll={{ x: 1000 }}>
+                <Column title="SN" dataIndex="SN" key="SN" />
+                <Column title="Phone Number" dataIndex="invitermobile" key="invitermobile" />
+                <Column title="Name" dataIndex="guestname" key="guestname" />
+
+			<Column
                 title="Action"
                 key="action"
                 render={(text, record) => (
-                    <Space size="middle" key={record.id}>
-                       <a onClick={()=>editReceptionist(record)}>Edit</a>
-							 <a onClick={()=>showConfirm(record.id)}>Delete</a> 
+                    <Space size="middle" key={record.SN}>
+                    
+							 <a onClick={()=>showConfirm(record.SN,record.invitermobile)}>Delete</a> 
                     </Space>
                 )}
-                />*/}
+                />
             </Table>
         </div>
 		</Content>
@@ -115,12 +120,12 @@ const ReceptionistPage = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        receptionists: state.ReceptionistReducer.receptionists,
+        guestlists: state.GuestlistsReducer.guestlists,
     };
 }
 
 const mapDispatchToProps = dispatch => ({
-    SaveReceptionists : (data) => dispatch(saveReceptionists(data)),
-    RemoveReceptionist: (id) => dispatch(removeReceptionist(id))
+    SaveGuestlists : (data) => dispatch(saveGuestlists(data)),
+    RemoveGuestlist: (id,invitermobile) => dispatch(removeGuestlist(id))
 })
-export default connect( mapStateToProps, mapDispatchToProps)(ReceptionistPage);
+export default connect( mapStateToProps, mapDispatchToProps)(GuestlistPage);
