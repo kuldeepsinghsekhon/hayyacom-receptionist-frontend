@@ -147,8 +147,9 @@ const InviterSearch = (props) => {
                        <label> EventId: </label> {d?.value?.eventid} 
                        <a href={`/receptionists/hayyacom/editinviter/${d?.value.eventid}/${d.value?.mobile}`}> EditInviter </a>
                         <a href={`/receptionists/hayyacom/editevent/${d?.value.eventid}`}> EditEvent </a>
+                        <a href={`/receptionists/guestlist/${d?.value.mobile}`}> DeleteGuestlist </a>
                          {/* <a href={`/receptionists/hayyacom/addinviter_preview/${d?.value.eventid}`}> AddMoreInviter </a>  */}
-                        <Button onClick={()=>delete_guestlist(d?.value.eventid,d?.value.mobile)}> Delete Guestlist </Button>
+                        
                        </p></Row>)}
                  
                 </Card>

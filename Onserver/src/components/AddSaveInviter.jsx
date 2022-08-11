@@ -22,10 +22,10 @@ const InviteImage = styled.img`
 const AddSaveInviter = (props) => {
     let history = useHistory();
     const [visible, setVisible] = useState(false);
-    const [showmodal, setShowmodal] = useState(false);
     const [message, setMessage] = useState('');
     const [isLoading, setLoading] = useState(false);
     const [messageType, setMessageType] = useState('');
+    const [showmodal, setShowmodal] = useState(false);
     const [selectedFile, setSelectedFile] = useState();
     const [isFilePicked, setIsFilePicked] = useState(false);
     const [base64image, setBase64image] = useState('');
@@ -77,6 +77,7 @@ const AddSaveInviter = (props) => {
                 
                 setLoading(false)
                 setMessageType('success')
+                setMessage("Inviter Added Successfully to add More inviter Change mobile and other required values and click save again")
                 setVisible(false)
                // form.resetFields();
             })
@@ -84,7 +85,7 @@ const AddSaveInviter = (props) => {
                 console.log(err, "err")
                 const { message } = err
                 setMessageType('error')
-                setMessage(message)
+                setMessage(err.response.data.message)
                 setLoading(false)
                 setVisible(false)
             })
@@ -115,9 +116,9 @@ const AddSaveInviter = (props) => {
                 <Spin spinning={isLoading} delay={500}>
                     <Breadcrumb style={{ margin: '16px 0' }}>
                         <Breadcrumb.Item>Home</Breadcrumb.Item>
-                        <Breadcrumb.Item>Invitation</Breadcrumb.Item>
+                        <Breadcrumb.Item>Invitor</Breadcrumb.Item>
                     </Breadcrumb>
- {message && <Alerts type={messageType} message={message}/>}
+                    {message && <Alerts type={messageType} message={message} />}
                     <Card>
                         <Modal
                             title={'Invitation Preview'}
@@ -132,7 +133,8 @@ const AddSaveInviter = (props) => {
 
 
                      {data?   <Form {...layout} form={form} name="nest-messages" onFinish={onFinish} layout="vertical" validateMessages={validateMessages}>
-
+<p>Please note: On this page You may create/update inviter as many times as you want.
+     when you change phone number it will create a new inviter because each inviter is unique by Phonenumer and event ID</p>
                      <Form.Item
                                 name={['event', 'entranceURL']}
                                 label="entranceURL"
@@ -449,7 +451,7 @@ const AddSaveInviter = (props) => {
                         </Form>:''}
                         <Row>
                         <Button type="primary"  onClick={() => history.goBack()}>
-                                   Back To Preview
+                                   GoBack 
                                 </Button>
                         </Row>
 

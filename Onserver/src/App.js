@@ -18,23 +18,25 @@ import InviterSearch from './components/InviterSearch';
 import AddWhatsAppEvent from './components/AddWhatsAppEvent';
 import EditMobileEvent from './components/EditMobileEvent';
 import AddPartyHall from './components/AddPartyHall';
+import GuestlistPage from './components/GuestlistPage';
 import { Helmet } from 'react-helmet';
 function App() {
   return (
     <div>
        <Switch>
-          <Route exact path={`${process.env.PUBLIC_URL}/`} component={ReceptionistPage} />    
-			<Route  path={`${process.env.PUBLIC_URL}/hayyacom/events`}component={HayyacomEventPage} />  
-			<Route exact path={`${process.env.PUBLIC_URL}/whatsapp/events`} component={WhatsappEventPage} /> 				
-			<Route exact path={`${process.env.PUBLIC_URL}/hayyacom/event/:id`} component={EditHayyacomEventPage} />  
-			<Route exact path={`${process.env.PUBLIC_URL}/hayyacom/addevent`} component={AddMobileEvent} /> 
-			<Route exact path={`${process.env.PUBLIC_URL}/hayyacom/editevent/:id`} component={EditMobileEvent} />
-			 <Route exact path={`${process.env.PUBLIC_URL}/hayyacom/addpartyhall`} component={AddPartyHall} />
-			   <Route exact path={`${process.env.PUBLIC_URL}/hayyacom/inviter_search`} component={InviterSearch} />
+        <Route exact path={`${process.env.PUBLIC_URL}/`} component={ReceptionistPage} />    
+		<Route  path={`${process.env.PUBLIC_URL}/hayyacom/events`}component={HayyacomEventPage} />  
+		<Route exact path={`${process.env.PUBLIC_URL}/whatsapp/events`} component={WhatsappEventPage} /> 				
+		<Route exact path={`${process.env.PUBLIC_URL}/hayyacom/event/:id`} component={EditHayyacomEventPage} />  
+		<Route exact path={`${process.env.PUBLIC_URL}/hayyacom/addevent`} component={AddMobileEvent} /> 
+		<Route exact path={`${process.env.PUBLIC_URL}/hayyacom/editevent/:id`} component={EditMobileEvent} />
+		<Route exact path={`${process.env.PUBLIC_URL}/hayyacom/addpartyhall`} component={AddPartyHall} />
+		<Route exact path={`${process.env.PUBLIC_URL}/hayyacom/inviter_search`} component={InviterSearch} />
         <Route exact path={`${process.env.PUBLIC_URL}/hayyacom/addinviter_preview/:eventid`} component={AddInviterPreview} />
         <Route exact path={`${process.env.PUBLIC_URL}/hayyacom/save_inviter_preview/:id`} component={AddSaveInviter} />
         <Route exact path={`${process.env.PUBLIC_URL}/hayyacom/editinviter/:eventid/:mobile`} component={AddEditInviter} />
-          <Route exact path={`${process.env.PUBLIC_URL}/hayyacom/add_wa_event`} component={AddWhatsAppEvent} /> 			
+        <Route exact path={`${process.env.PUBLIC_URL}/hayyacom/add_wa_event`} component={AddWhatsAppEvent} /> 
+		<Route exact path={`${process.env.PUBLIC_URL}/guestlist/:invitermobile`} component={GuestlistPage} />		  
        </Switch>
     </div>
   );

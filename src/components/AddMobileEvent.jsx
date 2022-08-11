@@ -76,14 +76,10 @@ const AddMobileEvent = (props) => {
 
     const options = data.map(d => <Option key={d.value}>{d.text}</Option>);
     const onFinish = async (values) => {
-        console.log(values)
         setMessage("")
         setLoading(true)
-        console.log('values.event.date',values.event.date)
-        let fdate=moment.utc(values.event.date, 'MM-DD-YYYY').format("YYYY-MM-DD")
-        console.log('fdae',fdate)
-        values.event.date =fdate;// values.event.date.format("YYYY/MM/DD")
-console.log(values.event)
+       // let fdate=moment.utc(values.event.date, 'MM-DD-YYYY').format("YYYY-MM-DD")
+       // values.event.date =fdate;// values.event.date.format("YYYY/MM/DD")
         let url = `${API_URL}/hayyacom/events/create`
 
         axios({
@@ -218,15 +214,16 @@ console.log(values.event)
                         >
                             <Input />
                         </Form.Item>
-                        <Form.Item label="DatePicker" name={['event', 'date']}
+                        <Form.Item  name={['event', 'date']}
                             label="Event Date"
-
+                           
                             rules={[
                                 {
                                     required: true,
                                 }
                             ]}>
-                            <DatePicker disabledDate={disabledDate} />
+                                 <Input  placeholder="mm/dd/yyyy"/>
+                            {/* <DatePicker disabledDate={disabledDate} /> */}
                         </Form.Item>
                         <Form.Item>
                             <Button type="primary" htmlType="submit">

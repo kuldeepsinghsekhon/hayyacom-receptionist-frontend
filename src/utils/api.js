@@ -54,6 +54,7 @@ export function apiReq(endPoint, data, method, headers, requestOptions = {}, sho
     })
 }
 export function apiGet(endPoint, data, headers = {}, requestOptions) {
+    console.log(endPoint)
     return apiReq(endPoint, data, 'get', headers, requestOptions)
 }
 export function apiPost(endPoint, data, headers = {}, requestOptions) {

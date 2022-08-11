@@ -26,7 +26,7 @@ const AddPartyHall = (props) => {
         console.log(values)
         setMessage("")
         setLoading(true)
-      
+
         //let url='https://hayyacom.net/WhatsappInvitation/hayyacom/events/create'
         let url = `${API_URL}/partyhall/create`
 
@@ -45,7 +45,7 @@ const AddPartyHall = (props) => {
             let ev = res.data.data
             console.log(' res.data', res.data)
             form.resetFields();///receptionists
-          
+
         })
             .catch(err => {
                 console.log(err, "err")
@@ -90,7 +90,7 @@ const AddPartyHall = (props) => {
                         >
                             <Input />
                         </Form.Item>
-                       
+
                         <Form.Item
                             name={['event', 'city']}
                             label="city"
@@ -100,25 +100,44 @@ const AddPartyHall = (props) => {
                                 },
                             ]}
                         >
-                            <Select defaultValue="Select" style={{ width: 120 }} >
-                                <Option value="Makkah">Makkah</Option>
+                            <Select defaultValue="HafrAlbatin" style={{ width: 120 }} >
+                                <Option value="HafrAlbatin">HafrAlbatin</Option>
+                                <Option value="Albaha">Albaha</Option>
+                                <Option value="Alqasim">Alqasim</Option>
+                                <Option value="Abha & KhamisMushit">Abha & KhamisMushit</Option>
+                                <Option value="Alqatif & Sihat">Alqatif & Sihat</Option>
+                                <Option value="Aldawadmi">Aldawadmi</Option>
+                                <Option value="Yanbu">Yanbu</Option>
+                                <Option value="Riyadh">Riyadh</Option>
+                                <Option value="Alkarj">Alkarj</Option>
+                                <Option value="AlThuraya">AlThuraya</Option>
+                                <Option value="Kuwit">Kuwit</Option>
+                                <Option value="Alahsa">Alahsa</Option>
+                                <Option value="Tabuk">Tabuk</Option>
+                                <Option value="AlAmmariah">AlAmmariah</Option>
+                                <Option value="Albajadiah">Albajadiah</Option>
+                                <Option value="Alafif">Alafif</Option>
+                                <Option value="Alkhafji">Alkhafji</Option>
+                                <Option value="Abudabi">Abudabi</Option>
+                                <Option value="Dubia">Dubia</Option>
+                                <Option value="Altaif">Altaif</Option>
+                                <Option value="Almajmaah">Almajmaah</Option>
+                                <Option value="AlDammam">AlDammam</Option>
+                                <Option value="AlDahran">AlDahran</Option>
+                                <Option value="Alkubar">Alkubar</Option>
+                                <Option value="Hail">Hail</Option>
+                                <Option value="Alkhafji">Alkhafji</Option>
                                 <Option value="Makkah">Makkah</Option>
                                 <Option value="Almadinah">Almadinah</Option>
                                 <Option value="Taif">Taif</Option>
                                 <Option value="Abha">Abha</Option>
-                                <Option value="Tabuk">Tabuk</Option>
                                 <Option value="Dammam">Dammam</Option>
                                 <Option value="Dawadmi">Dawadmi</Option>
-                                <Option value="Riyadh">Riyadh</Option>
                                 <Option value="Jizan">Jizan</Option>
                                 <Option value="alahsaa">alahsaa</Option>
-                                <Option value="Alqasim">Alqasim</Option>
-                                <Option value="Hail">Hail</Option>
                                 <Option value="Alzulfi">Alzulfi</Option>
                                 <Option value="Alkharj">Alkharj</Option>
-                                <Option value="Hafralbatin">Hafralbatin</Option>
                             </Select>
-
                         </Form.Item>
                         <Form.Item
                             name={['event', 'country']}
@@ -129,7 +148,7 @@ const AddPartyHall = (props) => {
                                 },
                             ]}
                         >
-                           <Input/>
+                            <Input />
                         </Form.Item>
                         <Form.Item
                             name={['event', 'locationURL']}

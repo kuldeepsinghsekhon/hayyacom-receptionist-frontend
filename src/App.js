@@ -20,6 +20,10 @@ import { Helmet } from 'react-helmet';
 import AddPartyHall from './components/AddPartyHall';
 import GuestlistPage from './components/GuestlistPage';
 function App() {
+	 let token = localStorage.getItem("token");
+	 if (!token) {
+    return <Login />
+  }
   return (
     <div>
       <Switch>
@@ -42,12 +46,5 @@ function App() {
     </div>
   );
 }
-const checkRoute = () => {
-  let token = localStorage.getItem("token")
-  if (token) {
-    return <Home />
-  } else {
-    return <Login />
-  }
-}
+
 export default App;

@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import UserReducer from './user';
 import ReceptionistReducer from './receptionist';
 import HayyacomEventReducer from './hayyacomevent';
+import GuestlistsReducer from './guestlist';
 import EventReducer from './event';
 import InvitationReducer from "./invitation"
 export default combineReducers({
@@ -9,5 +10,6 @@ export default combineReducers({
 	ReceptionistReducer: ReceptionistReducer,
 	HayyacomEventReducer: HayyacomEventReducer,
 	EventReducer: EventReducer,
+	GuestlistsReducer: GuestlistsReducer,
 	InvitationReducer: InvitationReducer
 });

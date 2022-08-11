@@ -73,7 +73,6 @@ let result = await axios({
             }
         });
         result = result?.data;
-        console.log('result?.data',result.image)
         setBase64image(result.image)
         setLoading(false)
         setShowmodal(true)
@@ -86,15 +85,8 @@ let result = await axios({
         setLoading(true)
         values.event.date = values?.event?.date?.format("DD/MM/YYYY")
         const formData = new FormData();
-
         formData.append('file', selectedFile);
         formData.append("document", JSON.stringify(values.event));
-
-        // formData.append('eventtitle'values.event)
-        //        
-        // formData.append('image', bannerImage)
-        // formData.append('name', bannerName)
-        //let url='https://hayyacom.net/WhatsappInvitation/hayyacom/events/create'
         let url = `${API_URL}/hayyacom/invitors/create_inviter_preview`
 
          axios({
@@ -103,24 +95,21 @@ let result = await axios({
             data: formData,
             headers: { 'Content-Type': 'multipart/form-data' }
         })
-            // addEventsApi(values.event)
             .then(res => {
-                console.log('res.data',res.data)
+             
                 setPrviewid(res.data.id)
                 handleImagePreview(res)
                 setLoading(false)
                 setMessageType('success')
-               // setVisible(false)
-                //form.resetFields();
+                setMessage("Inviter Preview Added Successfully")
                
             })
             .catch(err => {
-                console.log(err, "err")
-                const { message } = err
                 setMessageType('error')
-                setMessage(message)
+                setMessage(err.response.data.message)
                 setLoading(false)
                 setVisible(false)
+                console.log('err.response.data.message',err.response.data.message)
             })
     };
     const footer = () => {
